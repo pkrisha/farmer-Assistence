@@ -1,0 +1,534 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main>
+    <div class="container">
+        <div class="page-title">
+            <h2>Weather Live Updates</h2>
+            <p>Get real-time weather information for your farm location. Enter your coordinates or location name for personalized weather forecasts and agricultural recommendations.</p>
+        </div>
+
+        <div class="weather-content">
+            <!-- Location Search (Without Map) -->
+            <div class="location-info">
+                <h3>Enter Location</h3>
+                <div class="location-input">
+                    <input type="text" id="location-search" placeholder="Search or enter coordinates">
+                    <button id="search-btn">Search</button>
+                </div>
+                <p id="selected-location">Selected: <span>Gandinagar, India (23.2233, 72.6492)</span></p>
+            </div>
+
+            <!-- Weather Details -->
+            <div class="weather-details">
+                <!-- Current Weather -->
+                <div class="weather-card current-weather">
+                    <div class="weather-header">
+                        <div class="location">Gandinagar , India</div>
+                        <div class="weather-time">Updated: May 6, 2025 • 10:30 AM</div>
+                    </div>
+                    <div class="weather-main">
+                        <div class="temp-icon">
+                            <i class="fas fa-sun"></i>
+                            <div>
+                                <div class="temp">31°C</div>
+                                <div class="feels-like">Feels like: 33°C</div>
+                                <div class="weather-condition">Sunny</div>
+                            </div>
+                        </div>
+                        <div class="weather-details-list">
+                            <div class="weather-detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-tint"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="label">Humidity</span>
+                                    <span class="value">70%</span>
+                                </div>
+                            </div>
+                            <div class="weather-detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-wind"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="label">Wind</span>
+                                    <span class="value">13 km/h</span>
+                                </div>
+                            </div>
+                            <div class="weather-detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-cloud-rain"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="label">Chance of Rain</span>
+                                    <span class="value">20%</span>
+                                </div>
+                            </div>
+                            <div class="weather-detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-compress-arrows-alt"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="label">Pressure</span>
+                                    <span class="value">1012 hPa</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Forecast -->
+                <div class="weather-card forecast-section">
+                    <h3>5-Day Forecast</h3>
+                    <div class="forecast-list">
+                        <div class="forecast-item">
+                            <div class="day">Wed</div>
+                            <i class="fas fa-sun"></i>
+                            <div class="temp-high">32°C</div>
+                            <div class="temp-low">24°C</div>
+                        </div>
+                        <div class="forecast-item">
+                            <div class="day">Thu</div>
+                            <i class="fas fa-cloud-sun"></i>
+                            <div class="temp-high">30°C</div>
+                            <div class="temp-low">23°C</div>
+                        </div>
+                        <div class="forecast-item">
+                            <div class="day">Fri</div>
+                            <i class="fas fa-cloud"></i>
+                            <div class="temp-high">29°C</div>
+                            <div class="temp-low">23°C</div>
+                        </div>
+                        <div class="forecast-item">
+                            <div class="day">Sat</div>
+                            <i class="fas fa-cloud-rain"></i>
+                            <div class="temp-high">27°C</div>
+                            <div class="temp-low">22°C</div>
+                        </div>
+                        <div class="forecast-item">
+                            <div class="day">Sun</div>
+                            <i class="fas fa-cloud-sun"></i>
+                            <div class="temp-high">30°C</div>
+                            <div class="temp-low">23°C</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agriculture Tips -->
+                <div class="weather-card agriculture-tips">
+                    <h3>Agricultural Recommendations</h3>
+                    <div class="tip-list">
+                        <div class="tip-item">
+                            <div class="tip-icon">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <div class="tip-content">
+                                <h4>Watering Advisory</h4>
+                                <p>Increase watering frequency due to high temperatures forecast for the next 3 days.</p>
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-icon">
+                                <i class="fas fa-bug"></i>
+                            </div>
+                            <div class="tip-content">
+                                <h4>Pest Alert</h4>
+                                <p>High humidity conditions increase risk of fungal diseases. Consider preventative measures.</p>
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-icon">
+                                <i class="fas fa-tractor"></i>
+                            </div>
+                            <div class="tip-content">
+                                <h4>Field Operations</h4>
+                                <p>Ideal conditions for field work on Wednesday and Thursday before possible rain on Friday.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js"></script>
+<script>
+// OpenWeatherMap API configuration
+const WEATHER_API_KEY = '784f5def8f7fa2ca1966b061ef80c2fe'; 
+const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5';
+
+// Default coordinates (Lomé, Togo)
+let currentLat = 6.1285;
+let currentLng = 1.2255;
+
+// Fetch weather data on page load for default location
+document.addEventListener('DOMContentLoaded', function() {
+    fetchWeatherData(currentLat, currentLng);
+});
+
+// Handle search button click
+document.getElementById('search-btn').addEventListener('click', function() {
+    const searchInput = document.getElementById('location-search').value;
+    
+    // Check if input looks like coordinates
+    const coordsRegex = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
+    
+    if (coordsRegex.test(searchInput)) {
+        // Parse coordinates
+        const [lat, lng] = searchInput.split(',').map(coord => parseFloat(coord.trim()));
+        currentLat = lat;
+        currentLng = lng;
+        fetchWeatherData(lat, lng);
+    } else {
+        // Use the Geocoding API to convert location name to coordinates
+        geocodeLocation(searchInput);
+    }
+});
+
+// Function to geocode a location name to coordinates
+function geocodeLocation(locationName) {
+    const geocodeUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(locationName)}&limit=1&appid=${WEATHER_API_KEY}`;
+    
+    fetch(geocodeUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.length > 0) {
+                const location = data[0];
+                currentLat = location.lat;
+                currentLng = location.lon;
+                
+                // Fetch weather data for this location
+                fetchWeatherData(currentLat, currentLng);
+            } else {
+                alert('Location not found. Please try another search term.');
+            }
+        })
+        .catch(error => {
+            console.error('Error geocoding location:', error);
+            alert('Error searching for location. Please try again.');
+        });
+}
+
+// Function to fetch current weather and forecast data from OpenWeatherMap API
+function fetchWeatherData(lat, lng) {
+    // Round coordinates for display
+    const displayLat = Math.round(lat * 10000) / 10000;
+    const displayLng = Math.round(lng * 10000) / 10000;
+    
+    // Update selected location text
+    document.querySelector('#selected-location span').textContent = `${displayLat}, ${displayLng}`;
+    
+    // Fetch current weather
+    const currentWeatherUrl = `${WEATHER_BASE_URL}/weather?lat=${lat}&lon=${lng}&units=metric&appid=${WEATHER_API_KEY}`;
+    
+    fetch(currentWeatherUrl)
+        .then(response => response.json())
+        .then(data => {
+            updateCurrentWeather(data, displayLat, displayLng);
+            // After getting current weather, also get the forecast
+            return fetch(`${WEATHER_BASE_URL}/forecast?lat=${lat}&lon=${lng}&units=metric&appid=${WEATHER_API_KEY}`);
+        })
+        .then(response => response.json())
+        .then(data => {
+            updateForecast(data);
+            generateAgricultureTips(data);
+        })
+        .catch(error => {
+            console.error('Error fetching weather data:', error);
+            alert('Error fetching weather data. Please try again.');
+        });
+}
+
+// Function to update current weather display
+function updateCurrentWeather(data, displayLat, displayLng) {
+    // Update location name
+    const locationName = data.name ? `${data.name}, ${data.sys.country}` : `Location (${displayLat}, ${displayLng})`;
+    document.querySelector('.location').textContent = locationName;
+    
+    // Update temperature and condition
+    const temp = Math.round(data.main.temp);
+    const feelsLike = Math.round(data.main.feels_like);
+    document.querySelector('.temp').textContent = `${temp}°C`;
+    document.querySelector('.feels-like').textContent = `Feels like: ${feelsLike}°C`;
+    document.querySelector('.weather-condition').textContent = data.weather[0].main;
+    
+    // Update weather icon
+    const weatherIcon = getWeatherIcon(data.weather[0].id);
+    document.querySelector('.temp-icon i').className = weatherIcon;
+    
+    // Update weather details
+    document.querySelector('.weather-detail-item:nth-child(1) .value').textContent = `${data.main.humidity}%`;
+    document.querySelector('.weather-detail-item:nth-child(2) .value').textContent = `${Math.round(data.wind.speed * 3.6)} km/h`; // Convert m/s to km/h
+    document.querySelector('.weather-detail-item:nth-child(4) .value').textContent = `${data.main.pressure} hPa`;
+    
+    // Update timestamp
+    const now = new Date();
+    const timeString = now.toLocaleDateString() + ' • ' + 
+                      now.getHours().toString().padStart(2, '0') + ':' + 
+                      now.getMinutes().toString().padStart(2, '0');
+    document.querySelector('.weather-time').textContent = 'Updated: ' + timeString;
+}
+
+// Function to update 5-day forecast
+function updateForecast(data) {
+    const forecastList = document.querySelector('.forecast-list');
+    forecastList.innerHTML = ''; // Clear existing forecast items
+    
+    // Group forecast data by day (OpenWeatherMap provides forecast in 3-hour intervals)
+    const dailyForecasts = {};
+    
+    data.list.forEach(item => {
+        const date = new Date(item.dt * 1000);
+        const day = date.toLocaleDateString('en-US', { weekday: 'short' });
+        
+        if (!dailyForecasts[day]) {
+            dailyForecasts[day] = {
+                temps: [],
+                icons: [],
+                date: date
+            };
+        }
+        
+        dailyForecasts[day].temps.push(item.main.temp);
+        dailyForecasts[day].icons.push(item.weather[0].id);
+    });
+    
+    // Create forecast items (limit to 5 days)
+    let count = 0;
+    for (const day in dailyForecasts) {
+        if (count >= 5) break;
+        
+        const forecast = dailyForecasts[day];
+        
+        // Calculate high and low temperatures
+        const highTemp = Math.round(Math.max(...forecast.temps));
+        const lowTemp = Math.round(Math.min(...forecast.temps));
+        
+        // Determine most frequent weather condition
+        const modeIcon = getMostFrequentIcon(forecast.icons);
+        
+        // Create forecast item
+        const forecastItem = document.createElement('div');
+        forecastItem.className = 'forecast-item';
+        forecastItem.innerHTML = `
+            <div class="day">${day}</div>
+            <i class="${getWeatherIcon(modeIcon)}"></i>
+            <div class="temp-high">${highTemp}°C</div>
+            <div class="temp-low">${lowTemp}°C</div>
+        `;
+        
+        forecastList.appendChild(forecastItem);
+        count++;
+    }
+    
+    // If we have fewer than 5 days of forecast, fill with placeholders
+    while (count < 5) {
+        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        const forecastItem = document.createElement('div');
+        forecastItem.className = 'forecast-item';
+        forecastItem.innerHTML = `
+            <div class="day">${days[count % 7]}</div>
+            <i class="fas fa-question"></i>
+            <div class="temp-high">--°C</div>
+            <div class="temp-low">--°C</div>
+        `;
+        
+        forecastList.appendChild(forecastItem);
+        count++;
+    }
+}
+
+// Function to generate agricultural recommendations based on weather
+function generateAgricultureTips(forecastData) {
+    const tipList = document.querySelector('.tip-list');
+    tipList.innerHTML = ''; // Clear existing tips
+    
+    // Extract weather patterns from forecast
+    const temperatures = [];
+    const humidity = [];
+    const precipitation = [];
+    const windSpeed = [];
+    
+    forecastData.list.forEach(item => {
+        temperatures.push(item.main.temp);
+        humidity.push(item.main.humidity);
+        if (item.rain && item.rain['3h']) {
+            precipitation.push(item.rain['3h']);
+        } else {
+            precipitation.push(0);
+        }
+        windSpeed.push(item.wind.speed);
+    });
+    
+    // Calculate averages
+    const avgTemp = temperatures.reduce((sum, temp) => sum + temp, 0) / temperatures.length;
+    const avgHumidity = humidity.reduce((sum, h) => sum + h, 0) / humidity.length;
+    const totalPrecip = precipitation.reduce((sum, p) => sum + p, 0);
+    const avgWind = windSpeed.reduce((sum, w) => sum + w, 0) / windSpeed.length;
+    
+    // Generate tips based on conditions
+    const tips = [];
+    
+    // Temperature tips
+    if (avgTemp > 30) {
+        tips.push({
+            icon: 'fas fa-thermometer-full',
+            title: 'Heat Advisory',
+            content: 'High temperatures expected. Increase watering frequency and consider shade for sensitive crops.'
+        });
+    } else if (avgTemp < 15) {
+        tips.push({
+            icon: 'fas fa-thermometer-empty',
+            title: 'Cold Weather Alert',
+            content: 'Protect sensitive crops from cooler temperatures. Consider covering plants overnight.'
+        });
+    }
+    
+    // Precipitation tips
+    if (totalPrecip > 20) {
+        tips.push({
+            icon: 'fas fa-cloud-rain',
+            title: 'Heavy Rain Expected',
+            content: 'Ensure proper drainage in fields and consider delaying chemical applications.'
+        });
+    } else if (totalPrecip < 5 && avgTemp > 25) {
+        tips.push({
+            icon: 'fas fa-seedling',
+            title: 'Watering Advisory',
+            content: 'Dry conditions expected. Increase irrigation to maintain soil moisture levels.'
+        });
+    }
+    
+    // Humidity tips
+    if (avgHumidity > 80) {
+        tips.push({
+            icon: 'fas fa-bug',
+            title: 'Pest & Disease Alert',
+            content: 'High humidity increases risk of fungal diseases. Monitor crops and consider preventative measures.'
+        });
+    }
+    
+    // Wind tips
+    if (avgWind > 8) { // > 8 m/s is strong wind
+        tips.push({
+            icon: 'fas fa-wind',
+            title: 'Wind Advisory',
+            content: 'Strong winds expected. Delay spraying operations and protect young plants.'
+        });
+    }
+    
+    // Field operations tip based on precipitation forecast
+    const nextTwoDaysRain = precipitation.slice(0, 8).some(p => p > 1);
+    if (!nextTwoDaysRain) {
+        tips.push({
+            icon: 'fas fa-tractor',
+            title: 'Field Operations',
+            content: 'Good conditions for field work in the next 48 hours.'
+        });
+    }
+    
+    // Add seasonal crop advice
+    tips.push({
+        icon: 'fas fa-leaf',
+        title: 'Seasonal Reminder',
+        content: 'Check soil moisture levels regularly and adjust irrigation schedules based on current weather patterns.'
+    });
+    
+    // Add tips to the UI (limit to 3 for space)
+    tips.slice(0, 3).forEach(tip => {
+        const tipItem = document.createElement('div');
+        tipItem.className = 'tip-item';
+        tipItem.innerHTML = `
+            <div class="tip-icon">
+                <i class="${tip.icon}"></i>
+            </div>
+            <div class="tip-content">
+                <h4>${tip.title}</h4>
+                <p>${tip.content}</p>
+            </div>
+        `;
+        
+        tipList.appendChild(tipItem);
+    });
+}
+
+// Helper function to determine most frequent weather icon in an array
+function getMostFrequentIcon(icons) {
+    const counts = {};
+    let maxCount = 0;
+    let maxIcon = icons[0];
+    
+    icons.forEach(icon => {
+        counts[icon] = (counts[icon] || 0) + 1;
+        if (counts[icon] > maxCount) {
+            maxCount = counts[icon];
+            maxIcon = icon;
+        }
+    });
+    
+    return maxIcon;
+}
+
+// Helper function to map OpenWeatherMap condition codes to FontAwesome icons
+function getWeatherIcon(conditionId) {
+    // Based on OpenWeatherMap condition codes
+    // https://openweathermap.org/weather-conditions
+    
+    // Thunderstorm
+    if (conditionId >= 200 && conditionId < 300) {
+        return 'fas fa-bolt';
+    }
+    // Drizzle
+    else if (conditionId >= 300 && conditionId < 400) {
+        return 'fas fa-cloud-rain';
+    }
+    // Rain
+    else if (conditionId >= 500 && conditionId < 600) {
+        return conditionId === 511 ? 'fas fa-snowflake' : 'fas fa-cloud-showers-heavy';
+    }
+    // Snow
+    else if (conditionId >= 600 && conditionId < 700) {
+        return 'fas fa-snowflake';
+    }
+    // Atmosphere (fog, mist, etc.)
+    else if (conditionId >= 700 && conditionId < 800) {
+        return 'fas fa-smog';
+    }
+    // Clear
+    else if (conditionId === 800) {
+        return 'fas fa-sun';
+    }
+    // Clouds
+    else if (conditionId > 800) {
+        return conditionId === 801 ? 'fas fa-cloud-sun' : 'fas fa-cloud';
+    }
+    
+    // Default
+    return 'fas fa-cloud';
+}
+
+// Calculate chance of rain based on forecast data (used for current weather display)
+function calculateChanceOfRain(forecastData) {
+    if (!forecastData || !forecastData.list || forecastData.list.length === 0) {
+        return 0;
+    }
+    
+    // Look at the next 24 hours (8 entries at 3-hour intervals)
+    const next24Hours = forecastData.list.slice(0, 8);
+    
+    // Count entries with precipitation
+    const rainyPeriods = next24Hours.filter(period => 
+        (period.rain && period.rain['3h'] > 0) || 
+        (period.weather[0].id >= 200 && period.weather[0].id < 700)
+    );
+    
+    // Calculate percentage
+    return Math.round((rainyPeriods.length / next24Hours.length) * 100);
+}
+</script>
+{% endblock %}

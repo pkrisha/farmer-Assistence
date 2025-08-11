@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loan Entry Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesms.css') }}">
+    <style>
+
+/* :root {
+    --primary: #2e4057;
+    --secondary: #4da1a9;
+    --accent: #f19953;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --success: #2ecc71;
+    --danger: #e74c3c;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+} */
+:root {   
+    --primary: #7f6548;    /* Pastel Brown */
+    --secondary: #919a8a;  /* Pastel Green */
+    --accent: #9c926a;     /* Pastel Yellow */
+    --light: #343230;      /* Pastel Beige */
+    --dark: #935c29;       /* Dark Pastel Brown */
+    --text: #2b1a0e;       /* Muted Brown for Text */
+    --success: #2ecc71;
+    --danger: #e74c3c;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+    --box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    --overlay-gradient: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #e0d6b0;
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.card-header {
+    background: var(--primary);
+    color: white;
+    padding: 1.5rem;
+    position: relative;
+}
+
+.card-header h2 {
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.card-header p {
+    opacity: 0.9;
+    font-size: 0.95rem;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--dark);
+    font-size: 0.9rem;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 2px rgba(77, 161, 169, 0.2);
+}
+
+.input-icon {
+    position: relative;
+}
+
+.input-icon i {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 1rem;
+    color: #999;
+}
+
+.input-icon input {
+    padding-left: 2.5rem;
+}
+
+.btn-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    flex: 2;
+}
+
+.btn-secondary {
+    background-color: #e9ecef;
+    color: var(--dark);
+    flex: 1;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.btn-primary:hover {
+    background-color: #233142;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.active {
+    background-color: var(--success);
+}
+
+.pending {
+    background-color: var(--accent);
+}
+
+.status-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-option {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.status-option:hover {
+    border-color: var(--secondary);
+}
+
+input[type="radio"] {
+    width: auto;
+    margin-right: 8px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    margin-left: 6px;
+    color: #6c757d;
+}
+
+.tooltip:hover::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.progress-bar {
+    height: 4px;
+    background-color: #e9ecef;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.progress {
+    height: 100%;
+    width: 50%;
+    background-color: var(--secondary);
+    transition: width 0.5s ease;
+}
+
+.step-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 33.33%;
+}
+
+.step-number {
+    width: 30px;
+    height: 30px;
+    background-color: #e9ecef;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.step.active .step-number {
+    background-color: var(--secondary);
+    color: white;
+}
+
+.step-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.step.active .step-label {
+    color: var(--dark);
+    font-weight: 500;
+}
+
+.info-pill {
+    background-color: rgba(77, 161, 169, 0.1);
+    color: var(--secondary);
+    border-radius: 16px;
+    padding: 2px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+}
+
+@media screen and (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-group.full-width {
+        grid-column: span 1;
+    }
+    
+    .card-header {
+        padding: 1.2rem;
+    }
+    
+    .card-body {
+        padding: 1.2rem;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+    }
+    
+    .status-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .status-option {
+        width: 100%;
+    }
+}
+
+/* Animation effects */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+    animation: fadeIn 0.6s ease-out;
+}
+
+input:focus::placeholder {
+    transform: translateY(-10px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <span class="info-pill">New Entry</span>
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <line x1="2" y1="10" x2="22" y2="10" />
+                    </svg>
+                    Loan Details Entry
+                </h2>
+                <p>Complete the form below to register a new loan in the system</p>
+            </div>
+            
+            <div class="card-body">
+                <!-- <div class="step-indicator">
+                    <div class="step active">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Loan Information</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Review</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Confirmation</div>
+                    </div>
+                </div> -->
+                
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                
+                <form action="/submit-loan" method="POST">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="loan_id">Loan ID</label>
+                            <input type="text" id="loan_id" name="Loan_ID" placeholder="Enter loan identifier" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loan_status">Loan Status</label>
+                            <div class="status-group">
+                                <label class="status-option">
+                                    <input type="radio" name="loan_status" value="active" checked>
+                                    <span class="status-indicator active"></span>
+                                    Active
+                                </label>
+                                <label class="status-option">
+                                    <input type="radio" name="loan_status" value="pending">
+                                    <span class="status-indicator pending"></span>
+                                    Pending
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="principal">Principal Amount</label>
+                            <div class="input-icon">
+                                <i>₹</i>
+                                <input type="number" id="principal" name="Principal" placeholder="0.00" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="terms">Terms (days)</label>
+                            <input type="number" id="terms" name="terms" placeholder="Enter loan term" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="effective_date">Effective Date</label>
+                            <input type="date" id="effective_date" name="effective_date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="due_date">Due Date</label>
+                            <input type="date" id="due_date" name="due_date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="paid_off_time">
+                                Paid Off Time
+                                <span class="tooltip" data-tooltip="When was the loan repaid?">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                    </svg>
+                                </span>
+                            </label>
+                            <input type="datetime-local" id="paid_off_time" name="paid_off_time">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="past_due_days">Past Due Days</label>
+                            <input type="number" id="past_due_days" name="past_due_days" placeholder="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="age">Borrower Age</label>
+                            <input type="number" id="age" name="age" min="18" max="100" placeholder="Enter borrower age" required>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Loan Details</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const thirtyDaysLater = new Date();
+            thirtyDaysLater.setDate(today.getDate() + 30);
+            
+            const formatDate = date => {
+                return date.toISOString().split('T')[0];
+            };
+            
+            document.getElementById('effective_date').value = formatDate(today);
+            document.getElementById('due_date').value = formatDate(thirtyDaysLater);
+            
+            document.getElementById('effective_date').addEventListener('change', updateTerms);
+            document.getElementById('due_date').addEventListener('change', updateTerms);
+            
+            function updateTerms() {
+                const effectiveDate = new Date(document.getElementById('effective_date').value);
+                const dueDate = new Date(document.getElementById('due_date').value);
+                
+                if(effectiveDate && dueDate) {
+                    const diffTime = Math.abs(dueDate - effectiveDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    document.getElementById('terms').value = diffDays;
+                }
+            }
+            
+            document.getElementById('age').addEventListener('input', function() {
+                if (this.value < 18) {
+                    this.setCustomValidity('Borrower must be at least 18 years old');
+                } else if (this.value > 100) {
+                    this.setCustomValidity('Please enter a valid age');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

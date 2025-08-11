@@ -1,0 +1,520 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {   
+            --primary-color: #7f6548;    /* Pastel Brown */
+            --secondary-color: #919a8a;  /* Pastel Green */
+            --accent-color: #9c926a;     /* Pastel Yellow */
+            --light-color: #f5f3ee;      /* Light Beige (changed for readability) */
+            --dark-color: #935c29;       /* Dark Pastel Brown */
+            --text-color: #2b1a0e;       /* Muted Brown for Text */
+            --border-radius: 8px;
+            --box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --overlay-gradient: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
+        }
+        
+        body {
+            background-color: var(--light-color);
+            padding-top: 20px;
+            padding-bottom: 40px;
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            border-top: 4px solid var(--dark-color);
+        }
+        
+        .result-container {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border-top: 4px solid var(--secondary-color);
+        }
+        
+        .score-display {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--dark-color);
+            border-color: var(--dark-color);
+            color: white;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+        
+        .form-control, .form-select {
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            padding: 10px 15px;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(156, 146, 106, 0.25);
+        }
+        
+        .progress {
+            height: 12px;
+            border-radius: 6px;
+            background-color: #f2f2f2;
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar-success {
+            background-color: #7a9e63;
+        }
+        
+        .progress-bar-info {
+            background-color: var(--accent-color);
+        }
+        
+        .progress-bar-warning {
+            background-color: #d3ab6a;
+        }
+        
+        .progress-bar-danger {
+            background-color: #c3756b;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .badge-success {
+            background-color: #ebf5e4;
+            color: #547b38;
+            border: 1px solid #c5e1b0;
+        }
+        
+        .badge-info {
+            background-color: #f0ecd6;
+            color: #8a7b3e;
+            border: 1px solid #e5deae;
+        }
+        
+        .badge-warning {
+            background-color: #f9ecd7;
+            color: #c18d35;
+            border: 1px solid #f2daae;
+        }
+        
+        .badge-danger {
+            background-color: #f9e2df;
+            color: #b94a3d;
+            border: 1px solid #f1c3bc;
+        }
+        
+        .bank-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border-left: 4px solid var(--accent-color);
+            transition: var(--transition);
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .bank-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+        
+        .bank-card-header {
+            background-color: #f9f7f2;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .bank-card-body {
+            padding: 15px;
+        }
+        
+        .bank-name {
+            margin: 0;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+        
+        .bank-feature {
+            padding: 4px 0;
+            border-bottom: 1px dashed #efefef;
+        }
+        
+        .bank-feature:last-child {
+            border-bottom: none;
+        }
+        
+        .bank-feature i {
+            color: var(--secondary-color);
+            margin-right: 8px;
+        }
+        
+        .section-title {
+            position: relative;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+        
+        .recommendation-text {
+            font-style: italic;
+            background-color: #f9f7f2;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+            border-left: 3px solid var(--accent-color);
+        }
+    </style>
+
+
+    <div class="container">
+        <div class="header text-center">
+            <h1>Farmer Loan Eligibility Calculator</h1>
+            <p>Enter your details to check if you qualify for an agricultural loan</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="form-container">
+                    <form method="POST" action="/">
+                        <div class="mb-3">
+                            <label for="farm_size" class="form-label">Farm Size (acres)</label>
+                            <input type="number" step="0.01" class="form-control" id="farm_size" name="farm_size" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="annual_income" class="form-label">Annual Farm Income ($)</label>
+                            <input type="number" step="0.01" class="form-control" id="annual_income" name="annual_income" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="years_farming" class="form-label">Years of Farming Experience</label>
+                            <input type="number" class="form-control" id="years_farming" name="years_farming" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="credit_score" class="form-label">Credit Score (300-850)</label>
+                            <input type="number" min="300" max="850" class="form-control" id="credit_score" name="credit_score" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="existing_debt" class="form-label">Existing Debt ($)</label>
+                            <input type="number" step="0.01" class="form-control" id="existing_debt" name="existing_debt" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="crop_type" class="form-label">Primary Crop/Livestock</label>
+                            <select class="form-select" id="crop_type" name="crop_type" required>
+                                <option value="">Select...</option>
+                                <option value="grain">Grain (Wheat, Corn, etc.)</option>
+                                <option value="vegetables">Vegetables</option>
+                                <option value="fruits">Fruits</option>
+                                <option value="dairy">Dairy</option>
+                                <option value="poultry">Poultry</option>
+                                <option value="livestock">Livestock</option>
+                                <option value="specialty">Specialty Crops</option>
+                                <option value="mixed">Mixed Farming</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="collateral" class="form-label">Collateral Value ($)</label>
+                            <input type="number" step="0.01" class="form-control" id="collateral" name="collateral" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="loan_amount" class="form-label">Requested Loan Amount ($)</label>
+                            <input type="number" step="0.01" class="form-control" id="loan_amount" name="loan_amount" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="loan_term" class="form-label">Loan Term (years)</label>
+                            <select class="form-select" id="loan_term" name="loan_term" required>
+                                <option value="">Select...</option>
+                                <option value="1">1 year</option>
+                                <option value="3">3 years</option>
+                                <option value="5">5 years</option>
+                                <option value="7">7 years</option>
+                                <option value="10">10 years</option>
+                                <option value="15">15 years</option>
+                                <option value="20">20 years</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Calculate Eligibility</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-lg-7">
+                <div class="result-container">
+                    <h3 class="section-title">Loan Eligibility Results</h3>
+                    
+                    <div id="result-panel">
+                        <div class="score-display">Eligibility Score: <span id="eligibility-score">--</span>/100</div>
+                        
+                        <div class="status-badge badge-info">Enter your details to see your eligibility</div>
+                        
+                        <div class="progress mb-4">
+                            <div class="progress-bar progress-bar-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        
+                        <p class="recommendation-text">Please fill out the form to receive personalized loan recommendations based on your farming profile.</p>
+                        
+                        <div class="row" id="recommended-banks">
+                            <h4 class="section-title">Potential Loan Options</h4>
+                            
+                            <div class="col-md-6">
+                                <div class="bank-card">
+                                    <div class="bank-card-header">
+                                        <h5 class="bank-name">Farm Credit Services</h5>
+                                    </div>
+                                    <div class="bank-card-body">
+                                        <div class="bank-feature">
+                                            <i class="fas fa-check-circle"></i> Specialized agricultural loans
+                                        </div>
+                                        <div class="bank-feature">
+                                            <i class="fas fa-check-circle"></i> Competitive interest rates
+                                        </div>
+                                        <div class="bank-feature">
+                                            <i class="fas fa-check-circle"></i> Flexible repayment options
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="bank-card">
+                                    <div class="bank-card-header">
+                                        <h5 class="bank-name">USDA Farm Service Agency</h5>
+                                    </div>
+                                    <div class="bank-card-body">
+                                        <div class="bank-feature">
+                                            <i class="fas fa-check-circle"></i> Government-backed loans
+                                        </div>
+                                        <div class="bank-feature">
+                                            <i class="fas fa-check-circle"></i> Lower down payment requirements
+                                        </div>
+                                        <div class="bank-feature">
+                                            <i class="fas fa-check-circle"></i> Support for beginning farmers
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="bank-card">
+                                    <div class="bank-card-header">
+                                        <h5 class="bank-name">Community Rural Bank</h5>
+                                    </div>
+                                    <div class="bank-card-body">
+                                        <div class="bank-feature">
+                                            <i class="fas fa-check-circle"></i> Local decision making
+                                        </div>
+                                        <div class="bank-feature">
+                                            <i class="fas fa-check-circle"></i> Personalized service
+                                        </div>
+                                        <div class="bank-feature">
+                                            <i class="fas fa-check-circle"></i> Knowledge of local farming conditions
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="bank-card">
+                                    <div class="bank-card-header">
+                                        <h5 class="bank-name">Agricultural Bank</h5>
+                                    </div>
+                                    <div class="bank-card-body">
+                                        <div class="bank-feature">
+                                            <i class="fas fa-check-circle"></i> Equipment financing
+                                        </div>
+                                        <div class="bank-feature">
+                                            <i class="fas fa-check-circle"></i> Crop insurance options
+                                        </div>
+                                        <div class="bank-feature">
+                                            <i class="fas fa-check-circle"></i> Land purchase loans
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const resultPanel = document.getElementById('result-panel');
+            const scoreDisplay = document.getElementById('eligibility-score');
+            const progressBar = document.querySelector('.progress-bar');
+            const statusBadge = document.querySelector('.status-badge');
+            const recommendationText = document.querySelector('.recommendation-text');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const farmSize = parseFloat(document.getElementById('farm_size').value);
+                const annualIncome = parseFloat(document.getElementById('annual_income').value);
+                const yearsFarming = parseInt(document.getElementById('years_farming').value);
+                const creditScore = parseInt(document.getElementById('credit_score').value);
+                const existingDebt = parseFloat(document.getElementById('existing_debt').value);
+                const cropType = document.getElementById('crop_type').value;
+                const collateral = parseFloat(document.getElementById('collateral').value);
+                const loanAmount = parseFloat(document.getElementById('loan_amount').value);
+                const loanTerm = parseInt(document.getElementById('loan_term').value);
+                
+                // Calculate debt-to-income ratio
+                const debtToIncome = existingDebt / annualIncome;
+                
+                // Calculate loan-to-value ratio
+                const loanToValue = loanAmount / collateral;
+                
+                // Calculate eligibility score (simplified example)
+                let score = 0;
+                
+                // Credit score factor (0-25 points)
+                if (creditScore >= 750) score += 25;
+                else if (creditScore >= 700) score += 20;
+                else if (creditScore >= 650) score += 15;
+                else if (creditScore >= 600) score += 10;
+                else score += 5;
+                
+                // Experience factor (0-15 points)
+                if (yearsFarming >= 15) score += 15;
+                else if (yearsFarming >= 10) score += 12;
+                else if (yearsFarming >= 5) score += 9;
+                else if (yearsFarming >= 2) score += 6;
+                else score += 3;
+                
+                // Debt-to-income factor (0-20 points)
+                if (debtToIncome <= 0.2) score += 20;
+                else if (debtToIncome <= 0.3) score += 16;
+                else if (debtToIncome <= 0.4) score += 12;
+                else if (debtToIncome <= 0.5) score += 8;
+                else score += 4;
+                
+                // Loan-to-value factor (0-20 points)
+                if (loanToValue <= 0.5) score += 20;
+                else if (loanToValue <= 0.6) score += 16;
+                else if (loanToValue <= 0.7) score += 12;
+                else if (loanToValue <= 0.8) score += 8;
+                else score += 4;
+                
+                // Farm income factor (0-15 points)
+                if (annualIncome >= 100000) score += 15;
+                else if (annualIncome >= 70000) score += 12;
+                else if (annualIncome >= 50000) score += 9;
+                else if (annualIncome >= 30000) score += 6;
+                else score += 3;
+                
+                // Farm size factor (0-5 points)
+                if (farmSize >= 100) score += 5;
+                else if (farmSize >= 50) score += 4;
+                else if (farmSize >= 20) score += 3;
+                else if (farmSize >= 10) score += 2;
+                else score += 1;
+                
+                // Update the UI
+                scoreDisplay.innerText = score;
+                progressBar.style.width = score + '%';
+                progressBar.setAttribute('aria-valuenow', score);
+                
+                // Update status badge and progress bar class
+                if (score >= 80) {
+                    statusBadge.className = 'status-badge badge-success';
+                    statusBadge.innerText = 'Excellent Eligibility';
+                    progressBar.className = 'progress-bar progress-bar-success';
+                    recommendationText.innerText = 'Congratulations! You have excellent eligibility for agricultural loans. You should qualify for competitive rates and favorable terms with most lenders.';
+                } else if (score >= 60) {
+                    statusBadge.className = 'status-badge badge-info';
+                    statusBadge.innerText = 'Good Eligibility';
+                    progressBar.className = 'progress-bar progress-bar-info';
+                    recommendationText.innerText = 'You have good eligibility for agricultural loans. Consider applying with Farm Credit Services or USDA for the best terms.';
+                } else if (score >= 40) {
+                    statusBadge.className = 'status-badge badge-warning';
+                    statusBadge.innerText = 'Fair Eligibility';
+                    progressBar.className = 'progress-bar progress-bar-warning';
+                    recommendationText.innerText = 'You have fair eligibility for agricultural loans. Consider government-backed loan programs or improving your debt-to-income ratio before applying.';
+                } else {
+                    statusBadge.className = 'status-badge badge-danger';
+                    statusBadge.innerText = 'Limited Eligibility';
+                    progressBar.className = 'progress-bar progress-bar-danger';
+                    recommendationText.innerText = 'You may have challenges qualifying for conventional loans. Consider USDA beginning farmer programs, improving your credit score, or exploring alternative financing options.';
+                }
+            });
+        });
+    </script>
+
+
+
+{% endblock %}

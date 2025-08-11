@@ -1,0 +1,576 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+
+    /* About Page Styles with Farm Smarter Color Scheme */
+
+:root {   
+    --primary-color: #665035;    /* Pastel Brown */
+    --secondary-color: #919a8a;  /* Pastel Green */
+    --accent-color: #4d3a24;     /* Pastel Yellow */
+    --light-color: #957b5d;      /* Pastel Beige */
+    --dark-color: #221f1c;       /* Dark Pastel Brown */
+    --text-color: #2b1a0e;       /* Muted Brown for Text */
+    --border-radius: 8px;
+    --box-shadow: 0 6px 18px #7f6548;
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    --overlay-gradient: linear-gradient(#919a8a, #9c926a);
+}
+
+/* Global Styles */
+body {
+    font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.btn {
+    transition: var(--transition);
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    padding: 10px 25px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--dark-color);
+    border-color: var(--dark-color);
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow);
+}
+
+.btn-light {
+    background-color: #fff;
+    border-color: #fff;
+    color: var(--primary-color);
+}
+
+.btn-light:hover {
+    background-color: #f8f9fa;
+    color: var(--dark-color);
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow);
+}
+
+.btn-outline-light {
+    border-color: #fff;
+    color: #fff;
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Hero Section */
+.about-hero {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../static/images/farm-field.jpg") center/cover no-repeat;
+    color: white;
+    padding: 120px 0;
+    text-align: center;
+    position: relative;
+}
+
+.about-hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--overlay-gradient);
+    z-index: 1;
+}
+
+.about-hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.about-hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.about-hero p {
+    font-size: 1.25rem;
+    max-width: 700px;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* About Content Section */
+.about-content {
+    padding: 80px 0;
+}
+
+.about-content h2 {
+    margin-bottom: 25px;
+    color: var(--dark-color);
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.about-content h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background-color: var(--accent-color);
+}
+
+.feature-list {
+    padding-left: 20px;
+    list-style-type: none;
+}
+
+.feature-list li {
+    margin-bottom: 12px;
+    position: relative;
+    padding-left: 30px;
+}
+
+.feature-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.about-image {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    position: relative;
+}
+
+.about-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.about-image:hover img {
+    transform: scale(1.03);
+}
+
+/* SMS Feature Section */
+.sms-feature {
+    padding: 70px 0;
+    background-color: #f9f7f4; /* Light earthy tone */
+}
+
+.sms-feature h2 {
+    color: var(--dark-color);
+    margin-bottom: 20px;
+}
+
+.sms-feature .lead {
+    color: var(--primary-color);
+    font-weight: 500;
+    margin-bottom: 25px;
+}
+
+.sms-benefits {
+    margin-top: 40px;
+}
+
+.benefit-item {
+    display: flex;
+    margin-bottom: 30px;
+    align-items: flex-start;
+}
+
+.benefit-item i {
+    font-size: 24px;
+    color: var(--accent-color);
+    background-color: rgba(156, 146, 106, 0.1);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.benefit-item h4 {
+    margin-bottom: 10px;
+    color: var(--dark-color);
+}
+
+.benefit-item p {
+    margin-bottom: 0;
+    color: var(--text-color);
+}
+
+/* Phone Mockup for SMS Demo */
+.phone-mockup {
+    background-color: #222;
+    border-radius: 40px;
+    padding: 15px;
+    width: 300px;
+    box-shadow: var(--box-shadow);
+    margin: 0 auto;
+    position: relative;
+}
+
+.phone-screen {
+    background-color: #f9f9f9;
+    border-radius: 25px;
+    padding: 15px;
+    height: 550px;
+    overflow-y: auto;
+}
+
+.message-thread {
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    margin-bottom: 15px;
+    max-width: 85%;
+    padding: 12px 15px;
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.message.received {
+    align-self: flex-start;
+    background-color: #e9e9eb;
+    color: #333;
+}
+
+.message.sent {
+    align-self: flex-end;
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.message-content {
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.message-time {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-top: 5px;
+    text-align: right;
+}
+
+/* Testimonials Section */
+.testimonials {
+    padding: 80px 0;
+    background-color: white;
+}
+
+.testimonials h2 {
+    text-align: center;
+    margin-bottom: 50px;
+    color: var(--dark-color);
+}
+
+.testimonial-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 30px;
+    box-shadow: var(--box-shadow);
+    height: 100%;
+    transition: var(--transition);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.testimonial-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+}
+
+.quote {
+    font-style: italic;
+    margin-bottom: 25px;
+    position: relative;
+    padding-left: 25px;
+    color: var(--text-color);
+}
+
+.quote::before {
+    content: '"';
+    font-size: 60px;
+    font-family: Georgia, serif;
+    color: var(--accent-color);
+    opacity: 0.3;
+    position: absolute;
+    top: -20px;
+    left: -5px;
+}
+
+.farmer {
+    display: flex;
+    align-items: center;
+}
+
+.farmer-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--secondary-color);
+    margin-right: 15px;
+}
+
+.farmer-info h4 {
+    margin: 0;
+    color: var(--dark-color);
+}
+
+.farmer-info p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+/* CTA Section */
+.cta-section {
+    padding: 80px 0;
+    background-color: var(--primary-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../static/images/pattern.png');
+    opacity: 0.05;
+    pointer-events: none;
+}
+
+.cta-section h2 {
+    color: white;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.cta-section .lead {
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 40px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .about-hero h1 {
+        font-size: 2.8rem;
+    }
+    
+    .about-image {
+        margin-top: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-hero {
+        padding: 80px 0;
+    }
+    
+    .about-hero h1 {
+        font-size: 2.4rem;
+    }
+    
+    .benefit-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .benefit-item i {
+        margin: 0 auto 15px;
+    }
+    
+    .testimonial-card {
+        margin-bottom: 30px;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cta-buttons .btn {
+        width: 100%;
+        margin: 10px 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .about-hero h1 {
+        font-size: 2rem;
+    }
+    
+    .feature-list li {
+        padding-left: 25px;
+    }
+    
+    .phone-mockup {
+        width: 280px;
+    }
+    
+    .phone-screen {
+        height: 480px;
+    }
+}
+</style>
+
+<section class="about-hero">
+  <div class="container">
+    <h1>About Farm Smarter</h1>
+    <p>Helping farmers succeed with technology and data-driven insights</p>
+  </div>
+</section>
+
+<section class="about-content py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <h2>Our Mission</h2>
+        <p>At Farm Smarter, we're dedicated to empowering farmers with cutting-edge technology and data-driven insights. We understand the challenges of modern agriculture and have developed practical solutions to help you increase yields, reduce costs, and farm more sustainably.</p>
+        
+        <h2>What We Offer</h2>
+        <ul class="feature-list">
+          <li><strong>Crop Recommendations</strong> - Data-driven suggestions tailored to your soil and climate</li>
+          <li><strong>Fertilizer Advisor</strong> - Optimize your inputs for maximum yield and sustainability</li>
+          <li><strong>Disease Detection</strong> - Early identification of plant health issues using AI</li>
+          <li><strong>Financial Tracking</strong> - Monitor your farm expenditures and stay on budget</li>
+          <li><strong>Weather Forecasts</strong> - Stay prepared with accurate local weather predictions</li>
+        </ul>
+      </div>
+      <div class="col-lg-6">
+        <div class="about-image">
+          <img src="{{ url_for('static', filename='images/farm-team.jpg') }}" alt="Our Farm Team" class="img-fluid rounded">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sms-feature py-5 bg-light">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h2>Stay Connected Even Offline</h2>
+        <p class="lead">Our SMS Gateway keeps you informed when internet connectivity is limited</p>
+        <p>Farm Smarter understands that reliable internet isn't always available in rural farming areas. That's why we've developed our SMS Gateway service to deliver critical updates directly to your mobile phone.</p>
+        
+        <div class="sms-benefits">
+          <div class="benefit-item">
+            <i class="fas fa-coins text-primary"></i>
+            <h4>Loan Status Updates</h4>
+            <p>Receive notifications about loan application status, payment reminders, and approval confirmations.</p>
+          </div>
+          <div class="benefit-item">
+            <i class="fas fa-cloud-rain text-primary"></i>
+            <h4>Weather Alerts</h4>
+            <p>Get timely weather forecasts, storm warnings, and optimal planting conditions for your area.</p>
+          </div>
+        </div>
+        
+        <a href="{{ url_for('test') }}" class="btn btn-primary mt-3">See SMS Demo</a>
+     
+  </div>
+</section>
+
+<section class="testimonials py-5">
+  <div class="container">
+    <h2 class="text-center mb-4">What Farmers Are Saying</h2>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <div class="quote">"The SMS updates have been a game-changer for my remote farm. I no longer miss critical weather alerts even when I'm out in the fields with no internet."</div>
+          <div class="farmer">
+            <img src="{{ url_for('static', filename='images/farmer-1.jpg') }}" alt="Farmer" class="farmer-img">
+            <div class="farmer-info">
+              <h4>John Deere</h4>
+              <p>Corn & Soybean Farmer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <div class="quote">"Getting loan updates via text saved me hours of driving to the bank. I could focus on planting while staying informed about my financing."</div>
+          <div class="farmer">
+            <img src="{{ url_for('static', filename='images/farmer-2.jpg') }}" alt="Farmer" class="farmer-img">
+            <div class="farmer-info">
+              <h4>Maria Rodriguez</h4>
+              <p>Organic Vegetable Grower</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <div class="quote">"The soil analysis texting service helped me apply exactly what my crops needed. Better yields with less fertilizer expense!"</div>
+          <div class="farmer">
+            <img src="{{ url_for('static', filename='images/farmer-3.jpg') }}" alt="Farmer" class="farmer-img">
+            <div class="farmer-info">
+              <h4>Robert Johnson</h4>
+              <p>Wheat & Barley Farmer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section py-5 bg-primary text-white">
+  <div class="container text-center">
+    <h2>Ready to Farm Smarter?</h2>
+    <p class="lead">Join thousands of farmers who are using our platform to improve yields and reduce costs</p>
+    <div class="cta-buttons">
+      <a href="#" class="btn btn-light btn-lg mr-3">Create Free Account</a>
+      <a href="#" class="btn btn-outline-light btn-lg">Sign Up for SMS Service</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

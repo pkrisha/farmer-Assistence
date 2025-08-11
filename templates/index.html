@@ -1,0 +1,150 @@
+{% extends "base.html" %} {% block content %}
+<section class="farm-hero">
+  <div class="container">
+    <h1>Farm Smarter</h1>
+    <p>Get expert tips for your farm</p>
+    <a href="#" class="cta-button">Learn More</a>
+  </div>
+</section>
+
+<section class="features py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="feature-card">
+          <img
+            src="{{ url_for('static', filename='images/crop-field.jpg') }}"
+            alt="Crop Field"
+          />
+          <div class="feature-card-body">
+            <h3>Crop Rotation & Recommendation</h3>
+            <p>
+              Get personalized crop recommendations based on soil conditions,
+              weather, and location data.
+            </p>
+            <a href="http://localhost:8501" target="_blank" class="btn btn-primary">Predict NOW</a>
+          
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <img
+            src="{{ url_for('static', filename='images/fertilizer.jpg') }}"
+            alt="Fertilizer"
+          />
+          <div class="feature-card-body">
+            <h3>Fertilizer Advisor</h3>
+            <p>
+              Find the perfect fertilizer mix for your soil and crops to
+              maximize yield and sustainability.
+            </p>
+            <a href="{{ url_for('fertilizer') }}" class="btn btn-primary">Calculate Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <img
+            src="{{ url_for('static', filename='images/plant-disease.jpg') }}"
+            alt="Plant Disease"
+          />
+          <div class="feature-card-body">
+            <h3>Disease Detection</h3>
+            <p>
+              Identify plant diseases early with our AI-powered image
+              recognition system.
+            </p>
+            
+
+              <a href="http://localhost:8502" target="_blank" class="btn btn-primary">Predict NOW</a>
+              
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="info-cards py-5">
+  <div class="container">
+    <div class="row">
+      
+      <!-- Loan Repayment Estimate Card -->
+      <div class="col-md-6">
+        <div class="info-card finance-card">
+          <div class="card-icon">
+            <i class="fas fa-money-bill-wave"></i>
+          </div>
+          <div class="info-card-body">
+            <h3>Loan Repayment Estimate</h3>
+            <div class="finance-data">
+              <div class="finance-item">
+                <span class="finance-label">Loan Amount:</span>
+                <span class="finance-value" id="display-loan-amount">$0.00</span>
+              </div>
+              <div class="finance-item">
+                <span class="finance-label">Est. Interest Rate:</span>
+                <span class="finance-value">5.75%</span>
+              </div>
+              <div class="finance-item">
+                <span class="finance-label">Monthly Payment:</span>
+                <span class="finance-value highlight" id="monthly-payment">$0.00</span>
+              </div>
+            </div>
+            <div class="progress-container">
+              <div class="progress-bar" id="loan-progress" style="width: 62%"></div>
+            </div>
+           
+            <a href="{{ url_for('finance') }}" class="btn btn-secondary">Payment Schedule</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weather Live Updates Card -->
+      <div class="col-md-6">
+        <div class="info-card weather-card">
+          <div class="card-icon">
+            <i class="fas fa-cloud-sun"></i>
+          </div>
+          <div class="info-card-body">
+            <h3>Weather Live Updates</h3>
+            <div class="weather-now">
+              <div class="temp-display">
+                <span class="current-temp">24°C</span>
+                <span class="weather-condition">Partly Cloudy</span>
+              </div>
+              <div class="weather-details">
+                <div class="weather-item">
+                  <span class="weather-label">Humidity:</span>
+                  <span class="weather-value">65%</span>
+                </div>
+                <div class="weather-item">
+                  <span class="weather-label">Wind:</span>
+                  <span class="weather-value">12 km/h</span>
+                </div>
+                <div class="weather-item">
+                  <span class="weather-label">Rain Chance:</span>
+                  <span class="weather-value">30%</span>
+                </div>
+              </div>
+            </div>
+            <a href="{{ url_for('weather') }}" class="btn btn-secondary">5-Day Forecast</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+<script src="path/to/your/weather-card-script.js"></script>
+<script>
+  
+</script>
+{% endblock %}
+
+

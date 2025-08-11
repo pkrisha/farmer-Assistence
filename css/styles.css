@@ -1,0 +1,173 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.phone-container {
+    max-width: 380px;
+    width: 100%;
+    margin: 20px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    background: white;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.status-bar {
+    background-color: #2196F3;
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.status-bar .contact {
+    margin-left: 10px;
+}
+
+.messages-container {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background-color: #e5e5e5;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    margin-bottom: 10px;
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    position: relative;
+    clear: both;
+    word-wrap: break-word;
+}
+
+.received {
+    background-color: white;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+}
+
+.sent {
+    background-color: #e1ffc7;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+.time {
+    font-size: 11px;
+    color: #888;
+    margin-top: 5px;
+    text-align: right;
+}
+
+.input-area {
+    display: flex;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #e0e0e0;
+}
+
+.input-area input {
+    flex: 1;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    background-color: white;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.send-button {
+    width: 45px;
+    height: 45px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.send-button svg {
+    width: 24px;
+    height: 24px;
+}
+
+.back-arrow {
+    margin-right: 15px;
+}
+
+/* Previous message history */
+#history-messages {
+    margin-bottom: 15px;
+}
+
+/* Loading indicator */
+.typing-indicator {
+    align-self: flex-start;
+    background-color: #e0e0e0;
+    border-radius: 20px;
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    display: none;
+}
+
+.typing-dots {
+    display: flex;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: #777;
+    border-radius: 50%;
+    margin: 0 2px;
+    animation: bounce 1.5s infinite;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    0%, 60%, 100% {
+        transform: translateY(0);
+    }
+    30% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Styling for asterisks in messages */
+.message-content {
+    white-space: pre-wrap;
+}
+
+.message-content strong {
+    font-weight: bold;
+}

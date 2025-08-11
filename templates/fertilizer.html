@@ -1,0 +1,1007 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        :root {
+            --primary-color: #7f6548;    /* Pastel Brown */
+            --secondary-color: #919a8a;  /* Pastel Green */
+            --accent-color: #9c926a;     /* Pastel Yellow */
+            --light-color: #FEF3E2;      /* Pastel Beige */
+            --dark-color: #935c29;       /* Dark Pastel Brown */
+            --text-color: #2b1a0e;       /* Muted Brown for Text */
+            --border-radius: 8px;
+            --box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --overlay-gradient: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hero {
+            background: var(--overlay-gradient), url('static/images/fertilizer-bag.jpg') center/cover;
+            min-height: 500px;
+            display: flex;
+            margin-top: 0px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 1rem 1rem;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin-bottom: 2rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--dark-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .main {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+            text-align: center;
+        }
+
+        .advisor-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(145, 154, 138, 0.2);
+        }
+
+        .results {
+            display: none;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .results.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-title {
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .recommendation-card {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .recommendation-card h4 {
+            color: var(--dark-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .recommendation-card p {
+            margin-bottom: 0.5rem;
+        }
+
+        .recommendation-card strong {
+            color: var(--dark-color);
+        }
+
+        .nutrient-bars {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            gap: 0.5rem;
+        }
+
+        .nutrient-bar {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bar-label {
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+            text-align: center;
+        }
+
+        .bar-container {
+            height: 150px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: var(--secondary-color);
+            transition: height 1s ease;
+        }
+
+        .bar-value {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 4px;
+            font-size: 0.8rem;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 1rem;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .feature-card h3 {
+            margin-bottom: 0.75rem;
+            color: var(--dark-color);
+        }
+
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .copyright {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                gap: 0.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    
+
+    <section class="hero" id="home">
+      
+        <h2>Find the Perfect Fertilizer Mix</h2>
+        <p>Optimize your soil nutrition for maximum yield and sustainability based on your specific crops and soil conditions.</p>
+      
+    </section>
+
+    <main class="main" id="advisor">
+        <div class="container">
+            <h2 class="section-title">Fertilizer Advisor</h2>
+            <div class="advisor-container">
+                <form id="fertilizer-form">
+                    <div class="form-grid">
+                        <div>
+                            <div class="form-group">
+                                <label for="crop-type">Crop Type</label>
+                                <select id="crop-type" class="form-control" required>
+                                    <option value="">Select crop type</option>
+                                    <option value="corn">Corn</option>
+                                    <option value="wheat">Wheat</option>
+                                    <option value="soybeans">Soybeans</option>
+                                    <option value="rice">Rice</option>
+                                    <option value="potatoes">Potatoes</option>
+                                    <option value="tomatoes">Tomatoes</option>
+                                    <option value="lettuce">Lettuce</option>
+                                    <option value="cabbage">Cabbage</option>
+                                    <option value="carrots">Carrots</option>
+                                    <option value="cotton">Cotton</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="growth-stage">Growth Stage</label>
+                                <select id="growth-stage" class="form-control" required>
+                                    <option value="">Select growth stage</option>
+                                    <option value="seeding">Seeding</option>
+                                    <option value="vegetative">Vegetative</option>
+                                    <option value="flowering">Flowering</option>
+                                    <option value="fruiting">Fruiting</option>
+                                    <option value="maturity">Maturity</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="field-size">Field Size (acres)</label>
+                                <input type="number" id="field-size" class="form-control" min="0.1" step="0.1" placeholder="Enter field size" required>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label for="soil-type">Soil Type</label>
+                                <select id="soil-type" class="form-control" required>
+                                    <option value="">Select soil type</option>
+                                    <option value="clay">Clay</option>
+                                    <option value="sandy">Sandy</option>
+                                    <option value="loam">Loam</option>
+                                    <option value="silt">Silt</option>
+                                    <option value="peaty">Peaty</option>
+                                    <option value="chalky">Chalky</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="soil-ph">Soil pH</label>
+                                <input type="number" id="soil-ph" class="form-control" min="3" max="10" step="0.1" placeholder="Enter soil pH (3-10)" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="organic-matter">Organic Matter (%)</label>
+                                <input type="number" id="organic-matter" class="form-control" min="0" max="100" step="0.1" placeholder="Enter organic matter percentage" required>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label for="nitrogen-level">Current Nitrogen Level (ppm)</label>
+                                <input type="number" id="nitrogen-level" class="form-control" min="0" placeholder="Enter current nitrogen level" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phosphorus-level">Current Phosphorus Level (ppm)</label>
+                                <input type="number" id="phosphorus-level" class="form-control" min="0" placeholder="Enter current phosphorus level" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="potassium-level">Current Potassium Level (ppm)</label>
+                                <input type="number" id="potassium-level" class="form-control" min="0" placeholder="Enter current potassium level" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn">Generate Recommendations</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing soil and crop data...</p>
+            </div>
+
+            <div class="results" id="results">
+                <h3 class="result-title">Your Fertilizer Recommendations</h3>
+                <div class="recommendation-card">
+                    <h4 id="recommendation-title">Primary Recommendation</h4>
+                    <p id="recommendation-description">Based on your soil analysis and crop requirements, here's our primary recommendation:</p>
+                    <p><strong>NPK Ratio:</strong> <span id="npk-ratio">10-10-10</span></p>
+                    <p><strong>Application Rate:</strong> <span id="application-rate">25 lbs/acre</span></p>
+                    <p><strong>Timing:</strong> <span id="timing">Apply in early spring before planting</span></p>
+                    <p><strong>Method:</strong> <span id="method">Broadcast and incorporate into soil</span></p>
+                    
+                    <div class="nutrient-bars">
+                        <div class="nutrient-bar">
+                            <div class="bar-label">Nitrogen (N)</div>
+                            <div class="bar-container">
+                                <div class="bar-fill" id="n-bar" style="height: 60%; background-color: var(--primary-color);"></div>
+                                <div class="bar-value" id="n-value">60%</div>
+                            </div>
+                        </div>
+                        <div class="nutrient-bar">
+                            <div class="bar-label">Phosphorus (P)</div>
+                            <div class="bar-container">
+                                <div class="bar-fill" id="p-bar" style="height: 40%; background-color: var(--secondary-color);"></div>
+                                <div class="bar-value" id="p-value">40%</div>
+                            </div>
+                        </div>
+                        <div class="nutrient-bar">
+                            <div class="bar-label">Potassium (K)</div>
+                            <div class="bar-container">
+                                <div class="bar-fill" id="k-bar" style="height: 80%; background-color: var(--accent-color);"></div>
+                                <div class="bar-value" id="k-value">80%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recommendation-card">
+                    <h4>Sustainable Practices</h4>
+                    <p id="sustainable-practices">To maximize sustainability and minimize environmental impact:</p>
+                    <ul id="sustainable-list">
+                        <li>Consider split applications to reduce runoff</li>
+                        <li>Use slow-release fertilizers to improve nutrient efficiency</li>
+                        <li>Implement cover crops during off-seasons to prevent soil erosion</li>
+                        <li>Monitor soil moisture to optimize fertilizer uptake</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" id="features">
+            <h2 class="section-title">Features</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🌿</div>
+                    <h3>Crop-Specific</h3>
+                    <p>Tailored recommendations based on specific crop nutrient requirements at different growth stages.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧪</div>
+                    <h3>Soil Analysis</h3>
+                    <p>Factor in your soil type and current nutrient levels for precise fertilizer formulations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">♻️</div>
+                    <h3>Sustainable</h3>
+                    <p>Optimize nutrient use efficiency while minimizing environmental impact and runoff.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Visual Results</h3>
+                    <p>Clear visual representations of nutrient levels and recommendations.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('fertilizer-form');
+    const loading = document.getElementById('loading');
+    const results = document.getElementById('results');
+    
+    // Crop data - optimal nutrient levels by crop type
+    const cropData = {
+        corn: {
+            nitrogen: { min: 150, optimal: 180, max: 220 },
+            phosphorus: { min: 45, optimal: 60, max: 80 },
+            potassium: { min: 120, optimal: 150, max: 180 },
+            stageModifiers: {
+                seeding: { n: 0.3, p: 0.5, k: 0.3 },
+                vegetative: { n: 1.0, p: 0.7, k: 0.7 },
+                flowering: { n: 0.7, p: 0.5, k: 1.0 },
+                fruiting: { n: 0.5, p: 0.3, k: 0.8 },
+                maturity: { n: 0.2, p: 0.2, k: 0.5 }
+            }
+        },
+        wheat: {
+            nitrogen: { min: 100, optimal: 120, max: 150 },
+            phosphorus: { min: 30, optimal: 45, max: 60 },
+            potassium: { min: 80, optimal: 100, max: 120 },
+            stageModifiers: {
+                seeding: { n: 0.4, p: 0.6, k: 0.3 },
+                vegetative: { n: 0.8, p: 0.5, k: 0.6 },
+                flowering: { n: 0.5, p: 0.3, k: 0.8 },
+                fruiting: { n: 0.3, p: 0.2, k: 0.5 },
+                maturity: { n: 0.1, p: 0.1, k: 0.3 }
+            }
+        },
+        soybeans: {
+            nitrogen: { min: 0, optimal: 30, max: 50 },
+            phosphorus: { min: 40, optimal: 60, max: 80 },
+            potassium: { min: 130, optimal: 170, max: 200 },
+            stageModifiers: {
+                seeding: { n: 0.2, p: 0.6, k: 0.3 },
+                vegetative: { n: 0.4, p: 0.7, k: 0.6 },
+                flowering: { n: 0.3, p: 0.5, k: 1.0 },
+                fruiting: { n: 0.2, p: 0.4, k: 0.8 },
+                maturity: { n: 0.1, p: 0.2, k: 0.4 }
+            }
+        },
+        rice: {
+            nitrogen: { min: 100, optimal: 120, max: 150 },
+            phosphorus: { min: 25, optimal: 35, max: 45 },
+            potassium: { min: 80, optimal: 100, max: 120 },
+            stageModifiers: {
+                seeding: { n: 0.3, p: 0.5, k: 0.3 },
+                vegetative: { n: 0.8, p: 0.6, k: 0.6 },
+                flowering: { n: 0.6, p: 0.4, k: 0.8 },
+                fruiting: { n: 0.4, p: 0.3, k: 0.7 },
+                maturity: { n: 0.2, p: 0.2, k: 0.4 }
+            }
+        },
+        potatoes: {
+            nitrogen: { min: 120, optimal: 150, max: 180 },
+            phosphorus: { min: 100, optimal: 130, max: 160 },
+            potassium: { min: 200, optimal: 250, max: 300 },
+            stageModifiers: {
+                seeding: { n: 0.3, p: 0.7, k: 0.4 },
+                vegetative: { n: 0.7, p: 0.5, k: 0.6 },
+                flowering: { n: 0.5, p: 0.4, k: 0.8 },
+                fruiting: { n: 0.4, p: 0.3, k: 1.0 },
+                maturity: { n: 0.2, p: 0.2, k: 0.5 }
+            }
+        },
+        tomatoes: {
+            nitrogen: { min: 100, optimal: 130, max: 160 },
+            phosphorus: { min: 90, optimal: 120, max: 150 },
+            potassium: { min: 180, optimal: 220, max: 260 },
+            stageModifiers: {
+                seeding: { n: 0.3, p: 0.6, k: 0.3 },
+                vegetative: { n: 0.7, p: 0.5, k: 0.5 },
+                flowering: { n: 0.5, p: 0.6, k: 0.7 },
+                fruiting: { n: 0.4, p: 0.4, k: 1.0 },
+                maturity: { n: 0.2, p: 0.2, k: 0.6 }
+            }
+        },
+        lettuce: {
+            nitrogen: { min: 80, optimal: 100, max: 120 },
+            phosphorus: { min: 40, optimal: 60, max: 80 },
+            potassium: { min: 100, optimal: 130, max: 160 },
+            stageModifiers: {
+                seeding: { n: 0.4, p: 0.6, k: 0.4 },
+                vegetative: { n: 1.0, p: 0.5, k: 0.8 },
+                flowering: { n: 0.5, p: 0.3, k: 0.6 },
+                fruiting: { n: 0.3, p: 0.2, k: 0.4 },
+                maturity: { n: 0.2, p: 0.1, k: 0.3 }
+            }
+        },
+        cabbage: {
+            nitrogen: { min: 100, optimal: 120, max: 150 },
+            phosphorus: { min: 60, optimal: 80, max: 100 },
+            potassium: { min: 120, optimal: 150, max: 180 },
+            stageModifiers: {
+                seeding: { n: 0.3, p: 0.5, k: 0.3 },
+                vegetative: { n: 0.9, p: 0.6, k: 0.7 },
+                flowering: { n: 0.5, p: 0.4, k: 0.8 },
+                fruiting: { n: 0.3, p: 0.3, k: 0.6 },
+                maturity: { n: 0.2, p: 0.2, k: 0.4 }
+            }
+        },
+        carrots: {
+            nitrogen: { min: 60, optimal: 80, max: 100 },
+            phosphorus: { min: 80, optimal: 100, max: 120 },
+            potassium: { min: 150, optimal: 180, max: 220 },
+            stageModifiers: {
+                seeding: { n: 0.3, p: 0.5, k: 0.3 },
+                vegetative: { n: 0.7, p: 0.7, k: 0.5 },
+                flowering: { n: 0.4, p: 0.5, k: 0.7 },
+                fruiting: { n: 0.3, p: 0.4, k: 0.9 },
+                maturity: { n: 0.2, p: 0.3, k: 0.7 }
+            }
+        },
+        cotton: {
+            nitrogen: { min: 100, optimal: 120, max: 150 },
+            phosphorus: { min: 40, optimal: 60, max: 80 },
+            potassium: { min: 120, optimal: 150, max: 180 },
+            stageModifiers: {
+                seeding: { n: 0.3, p: 0.5, k: 0.3 },
+                vegetative: { n: 0.8, p: 0.6, k: 0.6 },
+                flowering: { n: 0.6, p: 0.5, k: 0.8 },
+                fruiting: { n: 0.4, p: 0.4, k: 1.0 },
+                maturity: { n: 0.2, p: 0.3, k: 0.6 }
+            }
+        }
+    };
+
+    // Soil type modifiers - affects nutrient availability
+    const soilModifiers = {
+        clay: { n: 0.9, p: 0.7, k: 0.8 },
+        sandy: { n: 0.7, p: 0.9, k: 0.6 },
+        loam: { n: 1.0, p: 1.0, k: 1.0 },
+        silt: { n: 0.9, p: 0.8, k: 0.9 },
+        peaty: { n: 1.2, p: 0.6, k: 0.7 },
+        chalky: { n: 0.8, p: 0.7, k: 0.9 }
+    };
+
+    // pH modifiers - affects nutrient availability
+    function getPHModifier(ph) {
+        if (ph < 5.0) return { n: 0.7, p: 0.4, k: 0.8 };
+        if (ph < 5.5) return { n: 0.8, p: 0.5, k: 0.9 };
+        if (ph < 6.0) return { n: 0.9, p: 0.7, k: 0.9 };
+        if (ph < 6.5) return { n: 1.0, p: 0.9, k: 1.0 };
+        if (ph < 7.0) return { n: 1.0, p: 1.0, k: 1.0 }; // Optimal
+        if (ph < 7.5) return { n: 0.9, p: 0.9, k: 1.0 };
+        if (ph < 8.0) return { n: 0.8, p: 0.7, k: 0.9 };
+        if (ph < 8.5) return { n: 0.7, p: 0.5, k: 0.8 };
+        return { n: 0.6, p: 0.4, k: 0.7 }; // pH > 8.5
+    }
+
+    // Organic matter modifier - higher organic matter generally means more nutrients
+    function getOrganicMatterModifier(om) {
+        if (om < 1.0) return { n: 0.7, p: 0.8, k: 0.8 };
+        if (om < 2.0) return { n: 0.8, p: 0.9, k: 0.9 };
+        if (om < 3.0) return { n: 0.9, p: 0.9, k: 0.9 };
+        if (om < 5.0) return { n: 1.0, p: 1.0, k: 1.0 }; // Optimal range
+        if (om < 8.0) return { n: 1.1, p: 1.0, k: 1.0 };
+        if (om < 12.0) return { n: 1.2, p: 1.0, k: 0.9 };
+        return { n: 1.3, p: 0.9, k: 0.9 }; // om > 12.0
+    }
+
+    // NPK content of common fertilizers (%)
+    const fertilizerTypes = {
+        "Urea": { n: 46, p: 0, k: 0 },
+        "Ammonium Nitrate": { n: 34, p: 0, k: 0 },
+        "Ammonium Sulfate": { n: 21, p: 0, k: 0 },
+        "Triple Superphosphate": { n: 0, p: 46, k: 0 },
+        "Potassium Chloride": { n: 0, p: 0, k: 60 },
+        "NPK 10-10-10": { n: 10, p: 10, k: 10 },
+        "NPK 15-15-15": { n: 15, p: 15, k: 15 },
+        "NPK 20-10-10": { n: 20, p: 10, k: 10 },
+        "NPK 10-20-10": { n: 10, p: 20, k: 10 },
+        "NPK 10-10-20": { n: 10, p: 10, k: 20 }
+    };
+
+    // Form submission handler
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading animation
+        loading.classList.add('active');
+        results.classList.remove('active');
+        
+        // Get form values
+        const cropType = document.getElementById('crop-type').value;
+        const growthStage = document.getElementById('growth-stage').value;
+        const fieldSize = parseFloat(document.getElementById('field-size').value);
+        const soilType = document.getElementById('soil-type').value;
+        const soilPH = parseFloat(document.getElementById('soil-ph').value);
+        const organicMatter = parseFloat(document.getElementById('organic-matter').value);
+        const currentN = parseFloat(document.getElementById('nitrogen-level').value);
+        const currentP = parseFloat(document.getElementById('phosphorus-level').value);
+        const currentK = parseFloat(document.getElementById('potassium-level').value);
+        
+        // Simulate server delay (remove in production)
+        setTimeout(() => {
+            calculateRecommendations(
+                cropType, growthStage, fieldSize, soilType, 
+                soilPH, organicMatter, currentN, currentP, currentK
+            );
+            
+            // Hide loading, show results
+            loading.classList.remove('active');
+            results.classList.add('active');
+            
+            // Scroll to results
+            results.scrollIntoView({ behavior: 'smooth' });
+        }, 1500);
+    });
+    
+    function calculateRecommendations(cropType, growthStage, fieldSize, soilType, soilPH, organicMatter, currentN, currentP, currentK) {
+        // Get crop-specific data
+        const crop = cropData[cropType];
+        
+        // Get modifiers
+        const stageModifier = crop.stageModifiers[growthStage];
+        const soilModifier = soilModifiers[soilType];
+        const phModifier = getPHModifier(soilPH);
+        const omModifier = getOrganicMatterModifier(organicMatter);
+        
+        // Calculate nutrient targets based on modifiers
+        const targetN = crop.nitrogen.optimal * stageModifier.n * soilModifier.n * phModifier.n * omModifier.n;
+        const targetP = crop.phosphorus.optimal * stageModifier.p * soilModifier.p * phModifier.p * omModifier.p;
+        const targetK = crop.potassium.optimal * stageModifier.k * soilModifier.k * phModifier.k * omModifier.k;
+        
+        // Calculate deficiencies (how much to add)
+        const deficitN = Math.max(0, targetN - currentN);
+        const deficitP = Math.max(0, targetP - currentP);
+        const deficitK = Math.max(0, targetK - currentK);
+        
+        // Calculate total deficiency for ratio calculation
+        const totalDeficit = deficitN + deficitP + deficitK;
+        
+        // Calculate NPK ratio (rounded to nearest whole numbers)
+        let nRatio = Math.round((deficitN / totalDeficit) * 100);
+        let pRatio = Math.round((deficitP / totalDeficit) * 100);
+        let kRatio = Math.round((deficitK / totalDeficit) * 100);
+        
+        // Ensure ratios add up to 100 and handle edge cases
+        if (isNaN(nRatio) || isNaN(pRatio) || isNaN(kRatio)) {
+            nRatio = 33;
+            pRatio = 33;
+            kRatio = 34;
+        } else {
+            // Normalize to ensure sum is 100
+            const sum = nRatio + pRatio + kRatio;
+            if (sum !== 100) {
+                const factor = 100 / sum;
+                nRatio = Math.round(nRatio * factor);
+                pRatio = Math.round(pRatio * factor);
+                kRatio = 100 - nRatio - pRatio; // Ensure exactly 100
+            }
+        }
+        
+        // Scale ratio down to typical fertilizer ratios (e.g., 10-10-10, 20-10-10)
+        let scaleFactor = 10;
+        if (Math.max(nRatio, pRatio, kRatio) > 40) {
+            scaleFactor = 5;
+        }
+        
+        const simplifiedN = Math.round(nRatio / scaleFactor);
+        const simplifiedP = Math.round(pRatio / scaleFactor);
+        const simplifiedK = Math.round(kRatio / scaleFactor);
+        
+        // Determine best commercial fertilizer match
+        const targetRatio = `${simplifiedN}-${simplifiedP}-${simplifiedK}`;
+        let bestFertilizer = findBestFertilizerMatch(simplifiedN, simplifiedP, simplifiedK);
+        
+        // Calculate application rate based on nitrogen needs (lbs/acre)
+        // This is a simplified calculation - in real-world scenarios, more factors would be considered
+        const applicationRate = Math.round((deficitN * 4.4) / (bestFertilizer.n / 100)); // Convert ppm to lbs/acre with 4.4 factor
+        
+        // Calculate nutrient levels as percentages relative to optimal
+        const nPercent = Math.min(100, Math.round((currentN / targetN) * 100));
+        const pPercent = Math.min(100, Math.round((currentP / targetP) * 100));
+        const kPercent = Math.min(100, Math.round((currentK / targetK) * 100));
+        
+        // Generate application timing recommendation based on growth stage
+        let timingRecommendation = getTimingRecommendation(cropType, growthStage);
+        
+        // Generate application method recommendation based on crop and soil type
+        let methodRecommendation = getMethodRecommendation(cropType, soilType);
+        
+        // Generate sustainable practices recommendations
+        let sustainablePractices = getSustainablePractices(cropType, soilType, soilPH, organicMatter);
+        
+        // Update UI with recommendations
+        updateRecommendationDisplay(
+            cropType, bestFertilizer.name, targetRatio, applicationRate * fieldSize,
+            timingRecommendation, methodRecommendation, sustainablePractices,
+            nPercent, pPercent, kPercent
+        );
+    }
+    
+    function findBestFertilizerMatch(n, p, k) {
+        let bestMatch = { name: "NPK 10-10-10", n: 10, p: 10, k: 10 };
+        let lowestDiff = Infinity;
+        
+        // Special case for highly imbalanced needs
+        if (n > 3 * (p + k)) {
+            return { name: "Urea", n: 46, p: 0, k: 0 };
+        } else if (p > 3 * (n + k)) {
+            return { name: "Triple Superphosphate", n: 0, p: 46, k: 0 };
+        } else if (k > 3 * (n + p)) {
+            return { name: "Potassium Chloride", n: 0, p: 0, k: 60 };
+        }
+        
+        // Find closest NPK match
+        for (const [name, content] of Object.entries(fertilizerTypes)) {
+            const diff = Math.abs(n - content.n/10) + Math.abs(p - content.p/10) + Math.abs(k - content.k/10);
+            if (diff < lowestDiff) {
+                lowestDiff = diff;
+                bestMatch = { name, ...content };
+            }
+        }
+        
+        return bestMatch;
+    }
+    
+    function getTimingRecommendation(cropType, growthStage) {
+        const timings = {
+            seeding: "Apply at planting time or immediately after",
+            vegetative: "Apply during early vegetative growth",
+            flowering: "Apply just before or at early flowering",
+            fruiting: "Apply during early fruit development",
+            maturity: "Apply light dressing to support final development"
+        };
+        
+        // Add crop-specific timing adjustments
+        let additional = "";
+        
+        if (cropType === "corn" && growthStage === "vegetative") {
+            additional = " Split application recommended with 60% now and 40% when plants are 12-18 inches tall.";
+        } else if (cropType === "potatoes" && growthStage === "vegetative") {
+            additional = " Consider a second application at tuber initiation.";
+        } else if (cropType === "tomatoes" && growthStage === "fruiting") {
+            additional = " Follow with calcium supplementation to prevent blossom-end rot.";
+        }
+        
+        return timings[growthStage] + additional;
+    }
+    
+    function getMethodRecommendation(cropType, soilType) {
+        // Default method
+        let method = "Broadcast and incorporate into soil";
+        
+        // Soil-specific adjustments
+        if (soilType === "sandy") {
+            method = "Split application to prevent leaching; incorporate into soil";
+        } else if (soilType === "clay") {
+            method = "Surface broadcast followed by light incorporation";
+        }
+        
+        // Crop-specific adjustments
+        if (["tomatoes", "cabbage", "lettuce"].includes(cropType)) {
+            method = "Side-dress around plants, keeping fertilizer away from foliage";
+        } else if (cropType === "corn") {
+            method = "Band application 2 inches to the side and 2 inches below seed";
+        } else if (cropType === "potatoes") {
+            method = "Band application at planting, followed by hilling operations";
+        }
+        
+        return method;
+    }
+    
+    function getSustainablePractices(cropType, soilType, pH, organicMatter) {
+        const practices = [];
+        
+        // Basic practices for all scenarios
+        practices.push("Consider split applications to reduce runoff and improve uptake efficiency");
+        
+        // Soil type specific recommendations
+        if (soilType === "sandy") {
+            practices.push("Use slow-release fertilizers to minimize leaching in your sandy soil");
+            practices.push("Add organic matter to improve nutrient retention capacity");
+        } else if (soilType === "clay") {
+            practices.push("Avoid over-application which may lead to runoff in clay soils");
+            practices.push("Consider deep placement of fertilizer to improve root access");
+        }
+        
+        // pH adjustments
+        if (pH < 5.5) {
+            practices.push("Apply lime to raise soil pH and improve nutrient availability");
+        } else if (pH > 7.5) {
+            practices.push("Consider acidifying amendments to lower pH for better nutrient access");
+        }
+        
+        // Organic matter recommendations
+        if (organicMatter < 2.0) {
+            practices.push("Implement cover crops and add compost to build soil organic matter");
+        }
+        
+        // Crop specific recommendations
+        if (cropType === "soybeans") {
+            practices.push("As a legume, soybeans fix nitrogen - reduce N application accordingly");
+        } else if (["corn", "wheat"].includes(cropType)) {
+            practices.push("Consider planting a legume cover crop in rotation to reduce nitrogen needs");
+        }
+        
+        return practices;
+    }
+    
+    function updateRecommendationDisplay(
+        cropType, fertilizerName, npkRatio, totalAmount, 
+        timing, method, sustainablePractices, nPercent, pPercent, kPercent
+    ) {
+        // Format crop type for display
+        const cropDisplay = cropType.charAt(0).toUpperCase() + cropType.slice(1);
+        
+        // Update recommendation title and description
+        document.getElementById('recommendation-title').textContent = `${cropDisplay} Fertilizer Recommendation`;
+        document.getElementById('recommendation-description').textContent = 
+            `Based on your soil analysis and ${cropDisplay} requirements, here's our primary recommendation:`;
+        
+        // Update NPK ratio and fertilizer type
+        document.getElementById('npk-ratio').textContent = `${npkRatio} (${fertilizerName})`;
+        
+        // Update application rate (round to nearest whole number)
+        document.getElementById('application-rate').textContent = `${Math.round(totalAmount)} lbs total (${Math.round(totalAmount / 50)} 50lb bags)`;
+        
+        // Update timing and method
+        document.getElementById('timing').textContent = timing;
+        document.getElementById('method').textContent = method;
+        
+        // Update nutrient bar charts
+        document.getElementById('n-bar').style.height = `${nPercent}%`;
+        document.getElementById('n-value').textContent = `${nPercent}%`;
+        
+        document.getElementById('p-bar').style.height = `${pPercent}%`;
+        document.getElementById('p-value').textContent = `${pPercent}%`;
+        
+        document.getElementById('k-bar').style.height = `${kPercent}%`;
+        document.getElementById('k-value').textContent = `${kPercent}%`;
+        
+        // Update sustainable practices
+        document.getElementById('sustainable-practices').textContent = 
+            `To maximize sustainability and minimize environmental impact for your ${cropDisplay} crop:`;
+        
+        // Clear and re-populate sustainable practices list
+        const sustainableList = document.getElementById('sustainable-list');
+        sustainableList.innerHTML = '';
+        
+        sustainablePractices.forEach(practice => {
+            const li = document.createElement('li');
+            li.textContent = practice;
+            sustainableList.appendChild(li);
+        });
+    }
+    
+    // Helper function to animate the bars when they come into view
+    function animateBars() {
+        const bars = document.querySelectorAll('.bar-fill');
+        bars.forEach(bar => {
+            const target = bar.style.height;
+            bar.style.height = '0%';
+            setTimeout(() => {
+                bar.style.height = target;
+            }, 100);
+        });
+    }
+    
+    // Add observer to animate bars when results come into view
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateBars();
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+    
+    observer.observe(results);
+});
+
+
+    </script>
+
+{% endblock %}
